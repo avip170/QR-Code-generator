@@ -1,96 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <EditText
-        android:id="@+id/editNameHome"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="Enter Name (e.g., John)"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="32dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"/>
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottom_navigation"/>
 
-    <EditText
-        android:id="@+id/editAddressHome"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="Enter Address (e.g., 123 Main St)"
-        app:layout_constraintTop_toBottomOf="@id/editNameHome"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"/>
-
-    <EditText
-        android:id="@+id/editZoneHome"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="Enter Zone (e.g., B)"
-        app:layout_constraintTop_toBottomOf="@id/editAddressHome"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"/>
-
-    <EditText
-        android:id="@+id/editSpotHome"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="Enter Spot (e.g., 17)"
-        app:layout_constraintTop_toBottomOf="@id/editZoneHome"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"/>
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_generate_qr"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Generate QR Code"
-        app:layout_constraintTop_toBottomOf="@id/editSpotHome"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="24dp"/>
-
-    <LinearLayout
-        android:id="@+id/bottom_buttons"
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="32dp">
+        android:layout_gravity="bottom"
+        app:menu="@menu/bottom_nav_menu"/>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_home"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Home"
-            android:layout_marginEnd="8dp"/>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_history"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="History"
-            android:layout_marginStart="8dp"/>
-    </LinearLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

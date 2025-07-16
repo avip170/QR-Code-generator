@@ -56,6 +56,7 @@ public class QrGeneratorActivity extends AppCompatActivity {
         if (spot == null) spot = "";
         String qrData = "Name:" + name + ";Address:" + address + ";Zone:" + zone + ";Spot:" + spot;
         generateAndShowQr(qrData);
+        saveGeneratedToHistory(name, address, zone, spot);
 
         btnSaveQr.setOnClickListener(v -> {
             if (lastBitmap == null) {
@@ -138,6 +139,37 @@ public class QrGeneratorActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
             Toast.makeText(this, "Failed to share QR", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    // After generating and showing the QR code, save to history
+    private void saveGeneratedToHistory(String name, String address, String zone, String spot) {
+        android.content.SharedPreferences sharedPreferences = getSharedPreferences("qr_scans", MODE_PRIVATE);
+        try {
+            String historyJson = sharedPreferences.getString("scan_history", "[]");
+            org.json.JSONArray historyArray = new org.json.JSONArray(historyJson);
+            org.json.JSONObject scanObj = new org.json.JSONObject();
+            scanObj.put("timestamp", new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss", java.util.Locale.getDefault()).format(new java.util.Date()));
+            scanObj.put("name", name);
+            scanObj.put("address", address);
+            scanObj.put("zone", zone);
+            scanObj.put("spot", spot);
+            // Save QR image to file
+            String fileName = "qr_" + System.currentTimeMillis() + ".png";
+            java.io.File dir = new java.io.File(getFilesDir(), "qr_history");
+            if (!dir.exists()) dir.mkdirs();
+            java.io.File file = new java.io.File(dir, fileName);
+            java.io.FileOutputStream fos = new java.io.FileOutputStream(file);
+            if (lastBitmap != null) {
+                lastBitmap.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, fos);
+                fos.flush();
+            }
+            fos.close();
+            scanObj.put("qrImagePath", file.getAbsolutePath());
+            historyArray.put(scanObj);
+            sharedPreferences.edit().putString("scan_history", historyArray.toString()).apply();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

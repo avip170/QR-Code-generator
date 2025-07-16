@@ -26,6 +26,7 @@
         <activity android:name=".QrScannerActivity" />
         <activity android:name=".HistoryActivity" />
         <activity android:name=".QrGeneratorActivity" />
+        <activity android:name=".QrImageViewActivity" />
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"

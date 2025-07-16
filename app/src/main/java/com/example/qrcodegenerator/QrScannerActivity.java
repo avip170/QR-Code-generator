@@ -22,6 +22,9 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
 
 public class QrScannerActivity extends AppCompatActivity {
     private DecoratedBarcodeView barcodeView;
@@ -114,12 +117,29 @@ public class QrScannerActivity extends AppCompatActivity {
             scanObj.put("address", address);
             scanObj.put("zone", zone);
             scanObj.put("spot", spot);
+            // Re-generate QR image from scanned text
+            String fileName = "qr_" + System.currentTimeMillis() + ".png";
+            java.io.File dir = new java.io.File(QrScannerActivity.this.getFilesDir(), "qr_history");
+            if (!dir.exists()) dir.mkdirs();
+            java.io.File file = new java.io.File(dir, fileName);
+            java.io.FileOutputStream fos = new java.io.FileOutputStream(file);
+            try {
+                BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+                android.graphics.Bitmap qrBitmap = barcodeEncoder.encodeBitmap(qrText, BarcodeFormat.QR_CODE, 400, 400);
+                if (qrBitmap != null) {
+                    qrBitmap.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, fos);
+                    fos.flush();
+                }
+            } catch (WriterException e) {
+                e.printStackTrace();
+            }
+            fos.close();
+            scanObj.put("qrImagePath", file.getAbsolutePath());
             historyArray.put(scanObj);
             sharedPreferences.edit().putString("scan_history", historyArray.toString()).apply();
-        } catch (JSONException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
         Toast.makeText(this, "Saved!", Toast.LENGTH_SHORT).show();
     }
 

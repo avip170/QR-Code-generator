@@ -12,6 +12,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
+import com.google.android.material.button.MaterialButton;
 
 public class HistoryActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
@@ -28,6 +29,14 @@ public class HistoryActivity extends AppCompatActivity {
         adapter = new ScanHistoryAdapter(scanList);
         recyclerView.setAdapter(adapter);
         loadHistory();
+
+        MaterialButton btnDeleteHistory = findViewById(R.id.btn_delete_history);
+        btnDeleteHistory.setOnClickListener(v -> {
+            SharedPreferences prefs = getSharedPreferences("qr_scans", Context.MODE_PRIVATE);
+            prefs.edit().remove("scan_history").apply();
+            scanList.clear();
+            adapter.notifyDataSetChanged();
+        });
     }
 
     private void loadHistory() {
@@ -39,9 +48,12 @@ public class HistoryActivity extends AppCompatActivity {
             for (int i = 0; i < arr.length(); i++) {
                 JSONObject obj = arr.getJSONObject(i);
                 String timestamp = obj.optString("timestamp");
+                String name = obj.optString("name");
+                String address = obj.optString("address");
                 String zone = obj.optString("zone");
                 String spot = obj.optString("spot");
-                scanList.add(new ScanHistoryItem(timestamp, zone, spot));
+                String qrImagePath = obj.optString("qrImagePath");
+                scanList.add(new ScanHistoryItem(timestamp, name, address, zone, spot, qrImagePath));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -51,12 +63,18 @@ public class HistoryActivity extends AppCompatActivity {
 
     public static class ScanHistoryItem {
         public final String timestamp;
+        public final String name;
+        public final String address;
         public final String zone;
         public final String spot;
-        public ScanHistoryItem(String timestamp, String zone, String spot) {
+        public final String qrImagePath;
+        public ScanHistoryItem(String timestamp, String name, String address, String zone, String spot, String qrImagePath) {
             this.timestamp = timestamp;
+            this.name = name;
+            this.address = address;
             this.zone = zone;
             this.spot = spot;
+            this.qrImagePath = qrImagePath;
         }
     }
 } 
